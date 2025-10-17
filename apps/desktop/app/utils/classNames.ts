@@ -50,3 +50,4 @@ function appendClass(value: string, newClass: string | undefined): string {
   if (!newClass) return value;
   return value ? `${value} ${newClass}` : newClass;
 }
+ 
