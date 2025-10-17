@@ -10,9 +10,8 @@ type ClassNamesArg = undefined | string | Record<string, boolean> | ClassNamesAr
 /**
  * A simple JavaScript utility for conditionally joining classNames together.
  *
- * @param args A series of classes or object with key that are class and values
- * that are interpreted as boolean to decide whether or not the class
- * should be included in the final class.
+ * @param args A series of classes or objects whose keys are class names and values
+ * determine whether the class should be included in the final string.
  */
 export function classNames(...args: ClassNamesArg[]): string {
   let classes = '';
@@ -21,10 +20,10 @@ export function classNames(...args: ClassNamesArg[]): string {
     classes = appendClass(classes, parseValue(arg));
   }
 
-  return classes;
+  return classes.trim();
 }
 
-function parseValue(arg: ClassNamesArg) {
+function parseValue(arg: ClassNamesArg): string {
   if (typeof arg === 'string' || typeof arg === 'number') {
     return String(arg);
   }
@@ -38,9 +37,8 @@ function parseValue(arg: ClassNamesArg) {
   }
 
   let classes = '';
-
   for (const key in arg) {
-    if (arg[key]) {
+    if (Object.prototype.hasOwnProperty.call(arg, key) && arg[key]) {
       classes = appendClass(classes, key);
     }
   }
@@ -48,14 +46,7 @@ function parseValue(arg: ClassNamesArg) {
   return classes;
 }
 
-function appendClass(value: string, newClass: string | undefined) {
-  if (!newClass) {
-    return value;
-  }
-
-  if (value) {
-    return value + ' ' + newClass;
-  }
-
-  return value + newClass;
+function appendClass(value: string, newClass: string | undefined): string {
+  if (!newClass) return value;
+  return value ? `${value} ${newClass}` : newClass;
 }
